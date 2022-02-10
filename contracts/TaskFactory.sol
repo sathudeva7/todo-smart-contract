@@ -2,7 +2,6 @@
 
 pragma solidity ^0.8.0;
 
-
 contract TaskFactory {
 	event NewTask(uint taskId, string task, bool completed, bool approved, uint reward);
 
@@ -24,7 +23,7 @@ contract TaskFactory {
         uint id = tasks.length - 1;
 		taskToOwner[id] = msg.sender;
 		ownerTaskCount[msg.sender]++;
-		depositUsingParameter(_reward);
+	//	depositUsingParameter(_reward);
 		emit NewTask(id, _task, _completed, _approved, _reward);
 	}
 
@@ -37,11 +36,11 @@ contract TaskFactory {
 		return tasks;
 	}
 
-	function _addChild(address _childId, uint _taskId) public{
+	function _addChild(address _childId, uint _taskId) public payable{
 		childToTask[_taskId] = _childId;
 	}
 
-	function _updateCompleteTask(uint _taskId) public {
+	function _updateCompleteTask(uint _taskId) public payable {
 		require(msg.sender == childToTask[_taskId]);
 		tasks[_taskId].completed = true;	
 	}	
@@ -49,7 +48,8 @@ contract TaskFactory {
 	function _updateApproveTask(uint _taskId) external payable {
 		require(msg.sender == taskToOwner[_taskId]);
 		tasks[_taskId].approved = true;
-		payable(childToTask[_taskId]).transfer(tasks[_taskId].reward);
+
+		payable(childToTask[_taskId]).transfer((tasks[_taskId].reward)* 1 ether);
 	}
 
 	function _withdraw(uint _taskId) external payable {

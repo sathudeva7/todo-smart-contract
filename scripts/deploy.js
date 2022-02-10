@@ -1,5 +1,5 @@
 const main =async () => {
-  const Tasks = await Headers.ethers.getContractFactory("TaskFactory");
+  const Tasks = await hre.ethers.getContractFactory("TaskFactory");
   const tasks = await Tasks.deploy();
 
   await tasks.deployed();
